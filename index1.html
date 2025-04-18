@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --primary-dark: #5649c0;
+            --secondary: #00cec9;
+            --success: #00b894;
+            --danger: #ff7675;
+            --warning: #fdcb6e;
+            --dark: #2d3436;
+            --light: #f8fafc;
+            --gray: #dfe6e9;
+            --white: #ffffff;
+            
+            --neon-blue: #00f2fe;
+            --neon-purple: #a18cd1;
+            --neon-pink: #f093fb;
+            
+            --header-gradient: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Header */
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .app-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .app-header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        /* Todo App */
+        .todo-app {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .todo-app:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Input Section */
+        .input-section {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        #task-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        #task-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #task-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px var(--neon-blue);
+        }
+
+        #add-task-btn {
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        #add-task-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        #add-task-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: var(--border-radius);
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Task List */
+        .task-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
+            animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .task-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--neon-blue);
+            transition: var(--transition);
+        }
+
+        .task-item.completed::before {
+            background: var(--success);
+        }
+
+        .task-checkbox {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--neon-blue);
+            transition: var(--transition);
+        }
+
+        .task-checkbox:hover {
+            transform: scale(1.1);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 1.1rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 118, 117, 0.1);
+        }
+
+        .task-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        /* Task Stats */
+        .task-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #clear-completed {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #clear-completed:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .app-header h1 {
+                font-size: 2rem;
+            }
+            
+            .input-container {
+                flex-direction: column;
+            }
+            
+            #add-task-btn {
+                padding: 12px;
+                justify-content: center;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1><i class="fas fa-tasks"></i> Neon Tasks</h1>
+            <p>Your glowing productivity companion</p>
+        </header>
+
+        <div class="todo-app">
+            <div class="input-section">
+                <div class="input-container">
+                    <input type="text" id="task-input" placeholder="What needs to be done?">
+                    <button id="add-task-btn">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> All
+                </button>
+                <button class="filter-btn" data-filter="active">
+                    <i class="fas fa-circle-notch"></i> Active
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <i class="fas fa-check-circle"></i> Completed
+                </button>
+            </div>
+
+            <ul id="task-list" class="task-list">
+                <!-- Tasks will be added here dynamically -->
+            </ul>
+
+            <div class="task-stats">
+                <span id="tasks-count">0 tasks remaining</span>
+                <button id="clear-completed">
+                    <i class="fas fa-trash"></i> Clear Completed
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const taskInput = document.getElementById('task-input');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const taskList = document.getElementById('task-list');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const tasksCount = document.getElementById('tasks-count');
+            const clearCompletedBtn = document.getElementById('clear-completed');
+            
+            // Initialize variables
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            let currentFilter = 'all';
+            
+            // Initialize the app
+            function init() {
+                renderTasks();
+                updateTaskCount();
+                
+                // Event listeners
+                addTaskBtn.addEventListener('click', addTask);
+                taskInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') addTask();
+                });
+                
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        currentFilter = this.dataset.filter;
+                        renderTasks();
+                    });
+                });
+                
+                clearCompletedBtn.addEventListener('click', clearCompletedTasks);
+            }
+            
+            // Add a new task
+            function addTask() {
+                const taskText = taskInput.value.trim();
+                if (taskText === '') {
+                    animateInputError();
+                    return;
+                }
+                
+                const newTask = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                
+                tasks.push(newTask);
+                saveTasks();
+                taskInput.value = '';
+                renderTasks();
+                updateTaskCount();
+                
+                // Add animation to new task
+                const newTaskElement = taskList.lastChild;
+                if (newTaskElement) {
+                    newTaskElement.style.animation = 'fadeInDown 0.5s ease';
+                    setTimeout(() => {
+                        newTaskElement.style.animation = '';
+                    }, 500);
+                }
+            }
+            
+            // Render tasks based on current filter
+            function renderTasks() {
+                taskList.innerHTML = '';
+                
+                let filteredTasks = tasks;
+                if (currentFilter === 'active') {
+                    filteredTasks = tasks.filter(task => !task.completed);
+                } else if (currentFilter === 'completed') {
+                    filteredTasks = tasks.filter(task => task.completed);
+                }
+                
+                if (filteredTasks.length === 0) {
+                    const noTasksMsg = document.createElement('p');
+                    noTasksMsg.className = 'no-tasks';
+                    noTasksMsg.textContent = currentFilter === 'all' ? 'No tasks yet. Add one above!' :
+                                            currentFilter === 'active' ? 'No active tasks' : 'No completed tasks';
+                    noTasksMsg.style.textAlign = 'center';
+                    noTasksMsg.style.padding = '20px';
+                    noTasksMsg.style.color = 'rgba(255, 255, 255, 0.7)';
+                    noTasksMsg.style.animation = 'fadeIn 0.5s ease';
+                    taskList.appendChild(noTasksMsg);
+                    return;
+                }
+                
+                filteredTasks.forEach(task => {
+                    const taskItem = document.createElement('li');
+                    taskItem.className = 'task-item';
+                    taskItem.dataset.id = task.id;
+                    if (task.completed) taskItem.classList.add('completed');
+                    
+                    taskItem.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                        <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                        <button class="delete-btn" title="Delete task"><i class="fas fa-trash"></i></button>
+                    `;
+                    
+                    const checkbox = taskItem.querySelector('.task-checkbox');
+                    const deleteBtn = taskItem.querySelector('.delete-btn');
+                    const taskText = taskItem.querySelector('.task-text');
+                    
+                    checkbox.addEventListener('change', function() {
+                        task.completed = this.checked;
+                        taskText.classList.toggle('completed', task.completed);
+                        taskItem.classList.toggle('completed', task.completed);
+                        saveTasks();
+                        updateTaskCount();
+                        
+                        // Add completion animation
+                        if (task.completed) {
+                            taskItem.style.animation = 'pulse 0.5s ease';
+                            setTimeout(() => {
+                                taskItem.style.animation = '';
+                            }, 500);
+                        }
+                    });
+                    
+                    deleteBtn.addEventListener('click', function() {
+                        // Add deletion animation
+                        taskItem.style.animation = 'fadeOut 0.3s ease';
+                        setTimeout(() => {
+                            tasks = tasks.filter(t => t.id !== task.id);
+                            saveTasks();
+                            renderTasks();
+                            updateTaskCount();
+                        }, 300);
+                    });
+                    
+                    taskList.appendChild(taskItem);
+                });
+            }
+            
+            // Clear completed tasks
+            function clearCompletedTasks() {
+                // Add confirmation animation
+                const completedTasks = document.querySelectorAll('.task-item.completed');
+                if (completedTasks.length === 0) return;
+                
+                completedTasks.forEach(task => {
+                    task.style.animation = 'fadeOut 0.3s ease';
+                });
+                
+                setTimeout(() => {
+                    tasks = tasks.filter(task => !task.completed);
+                    saveTasks();
+                    renderTasks();
+                    updateTaskCount();
+                }, 300);
+            }
+            
+            // Update task counter
+            function updateTaskCount() {
+                const activeTasks = tasks.filter(task => !task.completed).length;
+                tasksCount.textContent = `${activeTasks} ${activeTasks === 1 ? 'task' : 'tasks'} remaining`;
+            }
+            
+            // Save tasks to localStorage
+            function saveTasks() {
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+            
+            // Animate input error
+            function animateInputError() {
+                taskInput.style.border = '2px solid var(--danger)';
+                taskInput.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    taskInput.style.border = 'none';
+                    taskInput.style.animation = '';
+                }, 500);
+            }
+            
+            // Add custom animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    20%, 60% { transform: translateX(-5px); }
+                    40%, 80% { transform: translateX(5px); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(-20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Initialize the app
+            init();
+        });
+    </script>
+</body>
+</html>
