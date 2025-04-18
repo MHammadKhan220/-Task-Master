@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro TaskMaster- Advanced To-Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="animated-header">
+            <div class="header-content">
+                <div class="app-controls">
+                    <button id="theme-toggle" class="icon-btn" title="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+                <h1><i class="fas fa-tasks logo-icon"></i> TaskMaster <span class="pro-badge">Premium</span></h1>
+                <p class="tagline">Small tasks today, big success tomorrow.</p>
+            </div>
+            <div class="header-wave"></div>
+        </header>
+
+        <div class="todo-app animated-container">
+            <div class="search-section">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="task-search" placeholder="Search tasks...">
+                    <button id="clear-search" class="icon-btn small" title="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="input-container">
+                    <input type="text" id="task-input" placeholder="What needs to be done?" aria-label="Task input">
+                    <div class="task-options">
+                        <select id="task-priority" aria-label="Task priority">
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                        <input type="date" id="task-due" aria-label="Due date">
+                    </div>
+                    <button id="add-task-btn" class="animated-button" aria-label="Add task">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-list"></i> All
+                    </button>
+                    <button class="filter-btn" data-filter="active">
+                        <i class="fas fa-circle-notch"></i> Active
+                    </button>
+                    <button class="filter-btn" data-filter="completed">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </button>
+                    <button class="filter-btn" data-filter="today">
+                        <i class="fas fa-calendar-day"></i> Today
+                    </button>
+                </div>
+                <div class="view-options">
+                    <button id="sort-by" class="icon-btn" title="Sort tasks">
+                        <i class="fas fa-sort-amount-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <ul id="task-list" class="task-list-animation" aria-live="polite">
+                <!-- Tasks will be added here dynamically -->
+            </ul>
+
+            <div class="task-stats">
+                <span id="tasks-count">0 tasks remaining</span>
+                <div class="action-buttons">
+                    <button id="clear-completed" class="animated-button small">
+                        <i class="fas fa-broom"></i> Clear Completed
+                    </button>
+                    <button id="export-tasks" class="animated-button small" title="Export tasks">
+                        <i class="fas fa-file-export"></i> Export
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="animated-footer">
+            <div class="footer-content">
+                <div class="footer-divider"></div>
+                <div class="footer-section">
+                    <p>© <span id="current-year"></span> Pro TaskMaster</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
